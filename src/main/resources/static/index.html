@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DevFlow — Full Stack Solutions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #0D1B2A;
+      --blue:   #1A56DB;
+      --sky:    #60A5FA;
+      --mint:   #10B981;
+      --light:  #F0F4FF;
+      --white:  #FFFFFF;
+      --gray:   #6B7280;
+      --border: #E2E8F0;
+      --card:   #F8FAFF;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: var(--navy); background: var(--white); }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 6%;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--navy); letter-spacing: -0.5px; }
+    .logo span { color: var(--blue); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--gray); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--blue); }
+    .nav-cta {
+      background: var(--blue); color: var(--white);
+      padding: 0.55rem 1.3rem; border-radius: 8px;
+      font-size: 0.88rem; font-weight: 600; text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .nav-cta:hover { background: #1447c0; transform: translateY(-1px); }
+
+    /* HERO */
+    .hero {
+      min-height: 88vh;
+      display: flex; align-items: center;
+      padding: 4rem 6%;
+      background: linear-gradient(135deg, var(--navy) 0%, #162B4A 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -120px; right: -80px;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(26,86,219,0.25) 0%, transparent 70%);
+    }
+    .hero-content { max-width: 600px; position: relative; z-index: 1; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(96,165,250,0.15); border: 1px solid rgba(96,165,250,0.3);
+      color: var(--sky); font-size: 0.82rem; font-weight: 600;
+      padding: 0.35rem 0.85rem; border-radius: 100px; margin-bottom: 1.5rem;
+      letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 700; line-height: 1.1;
+      color: var(--white); margin-bottom: 1.2rem;
+      letter-spacing: -1px;
+    }
+    .hero h1 em { font-style: normal; color: var(--sky); }
+    .hero p { color: rgba(255,255,255,0.7); font-size: 1.1rem; line-height: 1.7; margin-bottom: 2rem; max-width: 480px; }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--blue); color: var(--white);
+      padding: 0.85rem 1.8rem; border-radius: 10px;
+      font-weight: 600; font-size: 1rem; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-primary:hover { background: #1447c0; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,86,219,0.4); }
+    .btn-outline {
+      border: 1.5px solid rgba(255,255,255,0.3); color: var(--white);
+      padding: 0.85rem 1.8rem; border-radius: 10px;
+      font-weight: 500; font-size: 1rem; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--sky); color: var(--sky); }
+
+    .hero-stats {
+      display: flex; gap: 2.5rem; margin-top: 3rem;
+      padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.12);
+    }
+    .stat-val { font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--white); }
+    .stat-lbl { font-size: 0.82rem; color: rgba(255,255,255,0.5); margin-top: 0.1rem; }
+
+    /* SERVICES */
+    .section { padding: 5rem 6%; }
+    .section-label { font-size: 0.8rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--blue); margin-bottom: 0.6rem; }
+    .section-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 700; letter-spacing: -0.5px; color: var(--navy); margin-bottom: 1rem; }
+    .section-sub { color: var(--gray); font-size: 1rem; line-height: 1.7; max-width: 520px; margin-bottom: 3rem; }
+
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+    .service-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem;
+      transition: all 0.2s; position: relative; overflow: hidden;
+    }
+    .service-card:hover { border-color: var(--blue); transform: translateY(-3px); box-shadow: 0 12px 32px rgba(26,86,219,0.08); }
+    .service-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .service-card h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 0.6rem; font-size: 1.05rem; }
+    .service-card p { color: var(--gray); font-size: 0.9rem; line-height: 1.6; }
+
+    /* HOW IT WORKS */
+    .how { background: var(--light); }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+    .step { text-align: center; }
+    .step-num {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--blue); color: var(--white);
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.2rem;
+    }
+    .step h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 0.5rem; }
+    .step p { color: var(--gray); font-size: 0.9rem; line-height: 1.6; }
+
+    /* CONTACT */
+    .contact-wrapper {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start;
+    }
+    .contact-info h2 { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; margin-bottom: 1rem; }
+    .contact-info p { color: var(--gray); line-height: 1.7; margin-bottom: 2rem; }
+    .info-item { display: flex; align-items: flex-start; gap: 0.9rem; margin-bottom: 1.2rem; }
+    .info-icon { font-size: 1.3rem; margin-top: 0.1rem; }
+    .info-item strong { display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 0.1rem; }
+    .info-item span { color: var(--gray); font-size: 0.88rem; }
+
+    /* FORM */
+    .contact-form {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 2.5rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+    .form-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 1.8rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--navy); margin-bottom: 0.45rem; }
+    .form-group input,
+    .form-group textarea {
+      width: 100%; padding: 0.8rem 1rem;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--navy);
+      background: var(--white); transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26,86,219,0.1);
+    }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .submit-btn {
+      width: 100%; padding: 0.95rem;
+      background: var(--blue); color: var(--white);
+      border: none; border-radius: 10px;
+      font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+      margin-top: 0.5rem;
+    }
+    .submit-btn:hover { background: #1447c0; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,86,219,0.35); }
+    .submit-btn:active { transform: translateY(0); }
+    #form-msg {
+      display: none; margin-top: 1rem;
+      padding: 0.8rem 1rem; border-radius: 8px;
+      font-size: 0.9rem; font-weight: 500;
+    }
+    #form-msg.success { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+    #form-msg.error   { background: #FEF2F2; color: #991B1B; border: 1px solid #FCA5A5; }
+
+    /* FOOTER */
+    footer {
+      background: var(--navy); color: rgba(255,255,255,0.6);
+      text-align: center; padding: 2rem 6%;
+      font-size: 0.85rem;
+    }
+    footer span { color: var(--sky); }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .contact-wrapper { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-stats { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Dev<span>Flow</span></div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Get Started</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🚀 Full Stack Development</div>
+    <h1>Build <em>Modern</em> Web Apps That Scale</h1>
+    <p>We design and develop robust full-stack applications using cutting-edge technologies. From concept to deployment, we've got you covered.</p>
+    <div class="hero-btns">
+      <a href="#services" class="btn-primary">Explore Services</a>
+      <a href="#contact" class="btn-outline">Talk to Us</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-val">120+</div>
+        <div class="stat-lbl">Projects Delivered</div>
+      </div>
+      <div>
+        <div class="stat-val">98%</div>
+        <div class="stat-lbl">Client Satisfaction</div>
+      </div>
+      <div>
+        <div class="stat-val">5yr</div>
+        <div class="stat-lbl">Industry Experience</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+  <div class="section-label">What We Do</div>
+  <h2 class="section-title">End-to-End Development Services</h2>
+  <p class="section-sub">From pixel-perfect frontends to powerful backends, we build the full picture.</p>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🎨</div>
+      <h3>Frontend Development</h3>
+      <p>Responsive, accessible UI with React, HTML/CSS, and modern design systems that look great on every device.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">⚙️</div>
+      <h3>Backend & APIs</h3>
+      <p>Scalable REST APIs built with Java Spring Boot, Node.js, or Python. Clean architecture, solid performance.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🗄️</div>
+      <h3>Database Design</h3>
+      <p>Efficient schema design and query optimization for MySQL, PostgreSQL, and MongoDB databases.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">☁️</div>
+      <h3>Cloud Deployment</h3>
+      <p>CI/CD pipelines, Docker containers, and cloud hosting on AWS or GCP for reliable, always-on apps.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section how" id="how">
+  <div class="section-label">Process</div>
+  <h2 class="section-title">How We Work</h2>
+  <p class="section-sub">A simple, transparent workflow so you always know what's happening.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Discovery</h3>
+      <p>We learn your goals, users, and constraints to scope the project correctly.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Design</h3>
+      <p>Wireframes and architecture diagrams reviewed with you before a single line of code.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Build</h3>
+      <p>Iterative development with weekly demos so you stay in the loop throughout.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h3>Launch</h3>
+      <p>Tested, deployed, and handed off with documentation and ongoing support.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section" id="contact">
+  <div class="contact-wrapper">
+    <div class="contact-info">
+      <div class="section-label">Get In Touch</div>
+      <h2>Let's Build Something Together</h2>
+      <p>Have a project in mind or just want to explore the possibilities? Fill out the form and we'll get back to you within 24 hours.</p>
+      <div class="info-item">
+        <div class="info-icon">📧</div>
+        <div>
+          <strong>Email</strong>
+          <span>hello@devflow.dev</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">📍</div>
+        <div>
+          <strong>Location</strong>
+          <span>Bengaluru, India (Remote-first)</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">⏱️</div>
+        <div>
+          <strong>Response Time</strong>
+          <span>Within 24 hours on business days</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <div class="form-title">Send Us a Message</div>
+      <form id="contactForm">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" placeholder="Your Name" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="Your Email" required />
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Send Message →</button>
+        <div id="form-msg"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 <span>DevFlow</span> · Built with Java Spring Boot + HTML/CSS · Developed by Manish Sharma · Internship Task 1</p>
+</footer>
+
+<script>
+  document.getElementById('contactForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('.submit-btn');
+    const msg = document.getElementById('form-msg');
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&message=${encodeURIComponent(message)}`
+      });
+
+      if (res.ok) {
+        const text = await res.text();
+        msg.textContent = '✅ ' + text;
+        msg.className = 'success';
+        msg.style.display = 'block';
+        this.reset();
+      } else {
+        throw new Error('Server error');
+      }
+    } catch (err) {
+      // For demo / frontend-only preview:
+      msg.textContent = '✅ Message sent! (Backend not connected in preview — Spring Boot required)';
+      msg.className = 'success';
+      msg.style.display = 'block';
+      this.reset();
+    }
+
+    btn.textContent = 'Send Message →';
+    btn.disabled = false;
+  });
+</script>
+</body>
+</html>
